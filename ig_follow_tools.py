@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Herramienta simple (Linux/Windows) para Instagram (4 opciones):
+Herramienta simple (Linux/Windows) para Instagram (SIN archivos .txt):
 1) Ver QUIÉN TE SIGUE (followers_*)
 2) Ver A QUIÉNES SIGUES (following.html)
 3) Comparar SEGUIDOS vs SEGUIDORES (quiénes no te siguen de vuelta)
 4) Ver a QUIÉNES SEGUISTE y NO ACEPTARON (pending_follow_requests.html)
 
-Reglas fijas (no se preguntan):
-- Siempre abre enlaces en LOTES de 50 con PAUSA de 0.5s entre enlaces.
-- Los archivos se buscan en una sola ruta por defecto elegida por el programador.
-- Se generan archivos .txt con los usuarios y con los enlaces.
+Reglas fijas:
+- Abre enlaces en LOTES de 50 con PAUSA de 0.5s entre enlaces.
+- Los archivos se buscan en una sola ruta por defecto:
+    ./connections/followers_and_following/ o
+    ./instagram-*/connections/followers_and_following/
+- NO se crean archivos .txt: solo imprime conteos y abre pestañas.
 """
 
 from __future__ import annotations
@@ -20,7 +22,7 @@ import sys
 import time
 import webbrowser
 from pathlib import Path
-from typing import Iterable, List, Set, Optional
+from typing import Iterable, List, Set
 
 
 # =========================
@@ -31,16 +33,15 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 
 def _detectar_carpeta_dump() -> Path:
     """
-    Heurística MUY SIMPLE:
+    Heurística simple:
     1) Si existe ./connections/followers_and_following => usarla.
-    2) Si existe exactamente una carpeta "instagram-*/connections/followers_and_following" => usarla.
-    3) Si no, usar carpeta del script.
+    2) Si existe una carpeta "instagram-*/connections/followers_and_following" => usar la única encontrada.
+    3) En último caso, usar la carpeta del script.
     """
-    direct = SCRIPT_DIR / "connections" / "followers_and_following"
-    if direct.is_dir():
-        return direct
+    directo = SCRIPT_DIR / "connections" / "followers_and_following"
+    if directo.is_dir():
+        return directo
 
-    # buscar patrón instagram-*
     candidatos: List[Path] = []
     for hijo in SCRIPT_DIR.iterdir():
         if hijo.is_dir() and hijo.name.startswith("instagram-"):
@@ -51,7 +52,6 @@ def _detectar_carpeta_dump() -> Path:
     if len(candidatos) == 1:
         return candidatos[0]
 
-    # fallback
     return SCRIPT_DIR
 
 DATA_DIR = _detectar_carpeta_dump()
@@ -82,9 +82,6 @@ def extraer_usernames_html(html: str) -> Set[str]:
 
 def a_enlaces(users: Iterable[str]) -> List[str]:
     return [f"https://www.instagram.com/{u}" for u in users]
-
-def escribir_lineas(path: Path, lineas: Iterable[str]) -> None:
-    path.write_text("\n".join(lineas) + ("\n" if lineas else ""), encoding="utf-8")
 
 def abrir_en_batches(enlaces: List[str]) -> None:
     """
@@ -136,36 +133,28 @@ def cargar_pending() -> Set[str]:
 def opcion_1_ver_followers() -> None:
     users = sorted(cargar_followers())
     print(f"Seguidores encontrados: {len(users)}")
-    escribir_lineas(SCRIPT_DIR / "followers.txt", users)
-    links = a_enlaces(users)
-    escribir_lineas(SCRIPT_DIR / "followers_links.txt", links)
-    abrir_en_batches(links)
+    if users:
+        abrir_en_batches(a_enlaces(users))
 
 def opcion_2_ver_following() -> None:
     users = sorted(cargar_following())
     print(f"Seguidos encontrados: {len(users)}")
-    escribir_lineas(SCRIPT_DIR / "following.txt", users)
-    links = a_enlaces(users)
-    escribir_lineas(SCRIPT_DIR / "following_links.txt", links)
-    abrir_en_batches(links)
+    if users:
+        abrir_en_batches(a_enlaces(users))
 
 def opcion_3_comparar_no_te_siguen_de_vuelta() -> None:
     following = cargar_following()
     followers = cargar_followers()
     not_back = sorted(following - followers)
     print(f"No te siguen de vuelta: {len(not_back)}")
-    escribir_lineas(SCRIPT_DIR / "not_following_back.txt", not_back)
-    links = a_enlaces(not_back)
-    escribir_lineas(SCRIPT_DIR / "not_following_back_links.txt", links)
-    abrir_en_batches(links)
+    if not_back:
+        abrir_en_batches(a_enlaces(not_back))
 
 def opcion_4_pendientes_no_aceptados() -> None:
     pending = sorted(cargar_pending())
     print(f"Solicitudes de seguimiento pendientes (enviadas por ti): {len(pending)}")
-    escribir_lineas(SCRIPT_DIR / "pending_follow_requests.txt", pending)
-    links = a_enlaces(pending)
-    escribir_lineas(SCRIPT_DIR / "pending_follow_requests_links.txt", links)
-    abrir_en_batches(links)
+    if pending:
+        abrir_en_batches(a_enlaces(pending))
 
 
 # =========================
