@@ -1,20 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Herramienta simple (Linux/Windows) para Instagram (SIN archivos .txt):
-1) Ver QUIÉN TE SIGUE (followers_*)
-2) Ver A QUIÉNES SIGUES (following.html)
-3) Comparar SEGUIDOS vs SEGUIDORES (quiénes no te siguen de vuelta)
-4) Ver a QUIÉNES SEGUISTE y NO ACEPTARON (pending_follow_requests.html)
-
-Reglas fijas:
-- Abre enlaces en LOTES de 50 con PAUSA de 0.5s entre enlaces.
-- Los archivos se buscan en una sola ruta por defecto:
-    ./connections/followers_and_following/ o
-    ./instagram-*/connections/followers_and_following/
-- NO se crean archivos .txt: solo imprime conteos y abre pestañas.
-"""
-
 from __future__ import annotations
 
 import re
@@ -63,7 +46,7 @@ FOLLOWERS_GLOB = "followers_*.html"
 
 # Parámetros fijos de apertura
 BATCH_SIZE = 50
-PAUSE_SEC  = 0.5
+PAUSE_SEC  = 0.2
 
 
 # =========================
