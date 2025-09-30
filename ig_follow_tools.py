@@ -128,7 +128,7 @@ def opcion_2_ver_following() -> None:
 def opcion_3_comparar_no_te_siguen_de_vuelta() -> None:
     following = cargar_following()
     followers = cargar_followers()
-    not_back = sorted(following - followers)
+    not_back = sorted( following - followers )
     print(f"No te siguen de vuelta: {len(not_back)}")
     if not_back:
         abrir_en_batches(a_enlaces(not_back))
