@@ -1,6 +1,10 @@
-/connections
-/.vscode
-followers.txt
-following.txt
-me_siguen_no_sigo.txt
-sigo_no_me_siguen.txt
+# 1. Ignorar absolutamente todo
+*
+
+# 2. No ignorar este archivo .gitignore
+!.gitignore
+
+# 4. Permitir archivos específicos por extensión o nombre
+!*.py
+!*.sh
+!README.md
