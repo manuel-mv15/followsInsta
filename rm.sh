@@ -5,7 +5,7 @@ shopt -s extglob
 
 # 2. Ejecutamos el borrado ignorando tus archivos importantes
 # La sintaxis !(file1|file2) significa "todo lo que NO sea esto"
-rm -rf !(.git|.gitignore|analyze_instagram.py|open_profiles.py|README.md|rm.sh)
+rm -rf !(.git|.gitignore|analyze_instagram.py|open_profiles.py|README.md|*.sh)
 
 # 3. Desactivamos la opción (opcional, por limpieza)
 shopt -u extglob

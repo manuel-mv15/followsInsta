@@ -39,7 +39,19 @@ Este conjunto de scripts permite analizar tus conexiones de Instagram para ident
 
 ## Uso
 
-### Paso 1: Analizar las conexiones
+### Método Rápido (Recomendado)
+
+Puedes usar el script `ejecutar.sh` para automatizar el proceso. Este ejecutará el análisis e inmediatamente después abrirá el asistente de perfiles (tras una pausa de 5 segundos):
+
+```bash
+bash ejecutar.sh
+```
+
+*(Asegúrate de haberle dado primero permisos de ejecución si es necesario: `chmod +x ejecutar.sh`)*
+
+### Método Manual
+
+#### Paso 1: Analizar las conexiones
 
 Ejecuta el script de análisis para generar las listas:
 
@@ -53,7 +65,7 @@ Esto generará los siguientes archivos de texto:
 *   `me_siguen_no_sigo.txt`: **"Fans"** (Te siguen, tú no).
 *   `sigo_no_me_siguen.txt`: **"No Follow Back"** (Sigues, no te siguen).
 
-### Paso 2: Abrir perfiles (Opcional)
+#### Paso 2: Abrir perfiles (Opcional)
 
 Si deseas revisar los perfiles (por ejemplo, para dejar de seguir a quienes no te siguen), usa el script auxiliar:
 
@@ -66,6 +78,16 @@ python3 open_profiles.py
 3.  Elige el modo:
     *   **Modo 1**: Abrir perfiles uno por uno presionando Enter.
     *   **Modo 2**: Abrir todos los perfiles en pestañas del navegador (¡Úsalo con precaución si son muchos!).
+
+### Limpieza de Archivos
+
+Cuando hayas terminado, puedes ejecutar el script de limpieza `rm.sh`. Este script eliminará **de forma segura** los archivos instalados (datos `.html`) y los archivos de texto que se generaron, conservando **solamente** el código del proyecto:
+
+```bash
+bash rm.sh
+```
+
+*(Igualmente, si es necesario, dale permisos antes: `chmod +x rm.sh`)*
 
 ## Notas Importantes
 
